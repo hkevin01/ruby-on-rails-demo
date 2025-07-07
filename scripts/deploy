@@ -1,0 +1,143 @@
+#!/bin/bash
+
+# Deployment script for staging and production environments
+# Usage: ./scripts/deploy [staging|production]
+
+set -e
+
+ENVIRONMENT=${1:-staging}
+
+echo "🚀 Deploying to $ENVIRONMENT environment"
+
+# Validate environment
+if [[ "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" ]]; then
+    echo "❌ Invalid environment. Use 'staging' or 'production'"
+    exit 1
+fi
+
+# Ensure we're in the Rails root
+if [ ! -f "Gemfile" ]; then
+    echo "❌ No Gemfile found. Please run this script from the Rails application root."
+    exit 1
+fi
+
+# Pre-deployment checks
+echo "🔍 Running pre-deployment checks..."
+
+# Check git status
+if [[ -n $(git status --porcelain) ]]; then
+    echo "❌ Working directory is not clean. Please commit or stash changes."
+    exit 1
+fi
+
+# Check current branch
+current_branch=$(git branch --show-current)
+if [[ "$ENVIRONMENT" == "production" && "$current_branch" != "main" ]]; then
+    echo "❌ Production deployments must be from 'main' branch. Current: $current_branch"
+    exit 1
+fi
+
+# Run tests
+echo "🧪 Running test suite..."
+./scripts/test
+
+# Run code quality checks
+echo "🔍 Running code quality checks..."
+./scripts/lint
+
+# Check for pending migrations
+echo "🗄️  Checking for pending migrations..."
+if bundle exec rails db:migrate:status | grep -q "down"; then
+    echo "⚠️  Pending migrations detected. They will be run during deployment."
+fi
+
+# Production-specific checks
+if [[ "$ENVIRONMENT" == "production" ]]; then
+    echo "🔒 Running additional production checks..."
+    
+    # Check secrets are configured
+    if [[ -z "$SECRET_KEY_BASE" ]]; then
+        echo "❌ SECRET_KEY_BASE environment variable is not set"
+        exit 1
+    fi
+    
+    # Check database configuration
+    if ! bundle exec rails db:version >/dev/null 2>&1; then
+        echo "❌ Database connection failed"
+        exit 1
+    fi
+fi
+
+# Deploy based on environment
+case $ENVIRONMENT in
+    staging)
+        echo "📡 Deploying to staging..."
+        # Heroku staging deployment
+        if command -v heroku >/dev/null 2>&1; then
+            git push heroku-staging main
+            heroku run rails db:migrate --app your-app-staging
+            heroku restart --app your-app-staging
+        else
+            echo "ℹ️  Heroku CLI not found. Using alternative deployment method..."
+            # Add your staging deployment commands here
+        fi
+        ;;
+        
+    production)
+        echo "🌟 Deploying to production..."
+        
+        # Create deployment tag
+        tag="v$(date +%Y%m%d-%H%M%S)"
+        git tag -a "$tag" -m "Production deployment $tag"
+        
+        # Heroku production deployment
+        if command -v heroku >/dev/null 2>&1; then
+            git push heroku main
+            heroku run rails db:migrate --app your-app-production
+            heroku restart --app your-app-production
+        else
+            echo "ℹ️  Heroku CLI not found. Using alternative deployment method..."
+            # Add your production deployment commands here
+        fi
+        
+        # Push tags to origin
+        git push origin --tags
+        ;;
+esac
+
+# Post-deployment verification
+echo "🔍 Running post-deployment verification..."
+
+case $ENVIRONMENT in
+    staging)
+        staging_url="https://your-app-staging.herokuapp.com"
+        echo "Checking staging health..."
+        if curl -f -s "$staging_url/health" >/dev/null; then
+            echo "✅ Staging deployment successful!"
+            echo "🌐 Staging URL: $staging_url"
+        else
+            echo "❌ Staging health check failed"
+            exit 1
+        fi
+        ;;
+        
+    production)
+        production_url="https://your-app.com"
+        echo "Checking production health..."
+        if curl -f -s "$production_url/health" >/dev/null; then
+            echo "✅ Production deployment successful!"
+            echo "🌐 Production URL: $production_url"
+        else
+            echo "❌ Production health check failed"
+            exit 1
+        fi
+        ;;
+esac
+
+echo ""
+echo "🎉 Deployment to $ENVIRONMENT completed successfully!"
+echo ""
+echo "Next steps:"
+echo "  - Monitor application logs for any issues"
+echo "  - Verify key functionality is working"
+echo "  - Update team on deployment status"

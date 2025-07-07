@@ -1,0 +1,100 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+  <div class="container">
+    <!-- Brand -->
+    <%= link_to root_path, class: "navbar-brand fw-bold" do %>
+      <i class="fas fa-blog me-2"></i>
+      Rails Blog
+    <% end %>
+
+    <!-- Mobile menu toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navigation menu -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Main navigation -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <%= link_to "Home", root_path, class: "nav-link #{'active' if current_page?(root_path)}" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Posts", posts_path, class: "nav-link #{'active' if current_page?(posts_path)}" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Categories", categories_path, class: "nav-link #{'active' if current_page?(categories_path)}" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "About", about_path, class: "nav-link #{'active' if current_page?(about_path)}" %>
+        </li>
+      </ul>
+
+      <!-- Search form -->
+      <form class="d-flex me-3" role="search">
+        <div class="input-group">
+          <input class="form-control" type="search" placeholder="Search posts..." aria-label="Search" name="q" value="<%= params[:q] %>">
+          <button class="btn btn-outline-light" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- User navigation -->
+      <ul class="navbar-nav">
+        <% if user_signed_in? %>
+          <!-- User dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag(current_user.avatar.attached? ? current_user.avatar : 'default-avatar.png', 
+                           class: "rounded-circle me-2", 
+                           size: "24x24", 
+                           alt: "User avatar") %>
+              <%= current_user.name || current_user.email %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <%= link_to user_path(current_user), class: "dropdown-item" do %>
+                  <i class="fas fa-user me-2"></i>Profile
+                <% end %>
+              </li>
+              <li>
+                <%= link_to edit_user_registration_path, class: "dropdown-item" do %>
+                  <i class="fas fa-cog me-2"></i>Settings
+                <% end %>
+              </li>
+              <% if current_user.admin? %>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <%= link_to admin_dashboard_path, class: "dropdown-item" do %>
+                    <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+                  <% end %>
+                </li>
+              <% end %>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <%= link_to destroy_user_session_path, method: :delete, class: "dropdown-item" do %>
+                  <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                <% end %>
+              </li>
+            </ul>
+          </li>
+          
+          <!-- New post button -->
+          <li class="nav-item">
+            <%= link_to new_post_path, class: "btn btn-success ms-2" do %>
+              <i class="fas fa-plus me-1"></i>New Post
+            <% end %>
+          </li>
+        <% else %>
+          <!-- Guest navigation -->
+          <li class="nav-item">
+            <%= link_to "Sign In", new_user_session_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-outline-light ms-2" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>

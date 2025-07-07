@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Test runner script
+# Runs the complete test suite with proper setup
+
+set -e
+
+echo "🧪 Running Ruby on Rails Blog Test Suite"
+
+# Ensure we're in the Rails root
+if [ ! -f "Gemfile" ]; then
+    echo "❌ No Gemfile found. Please run this script from the Rails application root."
+    exit 1
+fi
+
+# Set test environment
+export RAILS_ENV=test
+
+echo "🔧 Preparing test environment..."
+
+# Install dependencies
+bundle install --quiet
+
+# Setup test database
+echo "🗄️  Setting up test database..."
+bundle exec rails db:test:prepare
+
+# Clear any previous test artifacts
+echo "🧹 Cleaning up previous test runs..."
+rm -rf coverage/
+rm -rf tmp/capybara/
+rm -f spec/examples.txt
+
+# Run different types of tests
+echo "🚀 Running tests..."
+
+# Run RSpec with coverage
+echo "Running RSpec tests..."
+bundle exec rspec \
+    --format documentation \
+    --format html --out tmp/rspec-results.html \
+    --format json --out tmp/rspec-results.json
+
+# Check coverage threshold
+if [ -f "coverage/.last_run.json" ]; then
+    coverage=$(ruby -r json -e "puts JSON.parse(File.read('coverage/.last_run.json'))['result']['line']")
+    echo "📊 Test coverage: ${coverage}%"
+    
+    # Fail if coverage is below threshold (90%)
+    if (( $(echo "$coverage < 90" | bc -l) )); then
+        echo "❌ Test coverage is below 90%. Please add more tests."
+        exit 1
+    fi
+fi
+
+echo "✅ All tests passed!"
+
+# Generate test report summary
+echo ""
+echo "📋 Test Summary:"
+echo "=================="
+if [ -f "tmp/rspec-results.json" ]; then
+    ruby -r json -e "
+        data = JSON.parse(File.read('tmp/rspec-results.json'))
+        puts \"Total examples: #{data['summary']['example_count']}\"
+        puts \"Passed: #{data['summary']['example_count'] - data['summary']['failure_count'] - data['summary']['pending_count']}\"
+        puts \"Failed: #{data['summary']['failure_count']}\"
+        puts \"Pending: #{data['summary']['pending_count']}\"
+    "
+fi
+
+echo ""
+echo "📄 Reports generated:"
+echo "  - HTML: tmp/rspec-results.html"
+echo "  - JSON: tmp/rspec-results.json"
+echo "  - Coverage: coverage/index.html"

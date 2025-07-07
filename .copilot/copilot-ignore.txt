@@ -1,0 +1,51 @@
+# Files and patterns to ignore for GitHub Copilot suggestions
+
+# Logs and temporary files
+*.log
+tmp/
+log/
+
+# Compiled assets
+public/assets/
+public/packs/
+node_modules/
+
+# Database files
+*.sqlite3
+*.sqlite3-journal
+
+# Environment and secrets
+.env*
+config/master.key
+config/credentials/*.key
+
+# Generated files
+Gemfile.lock
+yarn.lock
+package-lock.json
+
+# Coverage and test artifacts
+coverage/
+spec/examples.txt
+tmp/capybara/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Vendor directories
+vendor/bundle/
+vendor/cache/
+
+# Documentation
+docs/api/
+CHANGELOG.md
+
+# Third-party configurations
+.rubocop_todo.yml

@@ -1,0 +1,119 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  RUBY_VERSION: 3.1.0
+  RAILS_ENV: test
+  NODE_VERSION: 18
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: blog_test
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+          
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ env.RUBY_VERSION }}
+        bundler-cache: true
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'yarn'
+
+    - name: Install dependencies
+      run: |
+        bundle install --jobs 4 --retry 3
+        yarn install --frozen-lockfile
+
+    - name: Setup database
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/blog_test
+        REDIS_URL: redis://localhost:6379/0
+      run: |
+        bin/rails db:create
+        bin/rails db:schema:load
+
+    - name: Run RuboCop
+      run: bundle exec rubocop
+
+    - name: Run Brakeman security scan
+      run: bundle exec brakeman --exit-on-warn
+
+    - name: Run RSpec tests
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/blog_test
+        REDIS_URL: redis://localhost:6379/0
+      run: |
+        bundle exec rspec --format documentation --format RspecJunitFormatter --out tmp/test-results/rspec.xml
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results
+        path: tmp/test-results/
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      if: always()
+      with:
+        files: ./coverage/coverage.xml
+        fail_ci_if_error: true
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy to staging
+      run: |
+        echo "Deploy to staging environment"
+        # Add your deployment commands here
+        
+    - name: Run smoke tests
+      run: |
+        echo "Run smoke tests against staging"
+        # Add smoke test commands here

@@ -1,0 +1,114 @@
+#!/bin/bash
+
+# Setup script for new development environment
+# Run this script when setting up the project for the first time
+
+set -e
+
+echo "🔧 Setting up Ruby on Rails Blog Application"
+
+# Check if required commands exist
+echo "Checking system requirements..."
+
+check_command() {
+    if ! command -v $1 >/dev/null 2>&1; then
+        echo "❌ $1 is required but not installed."
+        echo "Please install $1 and try again."
+        exit 1
+    else
+        echo "✅ $1 is available"
+    fi
+}
+
+check_command ruby
+check_command bundle
+check_command yarn
+check_command git
+
+# Check Ruby version
+echo "Checking Ruby version..."
+ruby_version=$(ruby -v | cut -d' ' -f2)
+echo "✅ Ruby version: $ruby_version"
+
+# Check if we're in the right directory
+if [ ! -f "Gemfile" ]; then
+    echo "❌ No Gemfile found. Please run this script from the Rails application root."
+    exit 1
+fi
+
+# Install dependencies
+echo "📦 Installing dependencies..."
+
+# Install Ruby gems
+echo "Installing Ruby gems..."
+bundle install
+
+# Install JavaScript packages
+echo "Installing JavaScript packages..."
+yarn install
+
+# Setup database
+echo "🗄️  Setting up database..."
+bundle exec rails db:create
+bundle exec rails db:migrate
+
+# Seed database with sample data
+echo "🌱 Seeding database with sample data..."
+bundle exec rails db:seed
+
+# Setup credentials
+if [ ! -f "config/master.key" ]; then
+    echo "🔐 Setting up Rails credentials..."
+    bundle exec rails credentials:edit --environment development
+fi
+
+# Create necessary directories
+echo "📁 Creating necessary directories..."
+mkdir -p tmp/pids
+mkdir -p log
+mkdir -p storage
+
+# Setup git hooks (if in a git repository)
+if [ -d ".git" ]; then
+    echo "🔧 Setting up git hooks..."
+    # Add pre-commit hook for code quality
+    cat > .git/hooks/pre-commit << 'EOF'
+#!/bin/bash
+echo "Running pre-commit checks..."
+
+# Run RuboCop
+if ! bundle exec rubocop; then
+    echo "❌ RuboCop failed. Please fix the issues before committing."
+    exit 1
+fi
+
+# Run tests
+if ! bundle exec rspec; then
+    echo "❌ Tests failed. Please fix the failing tests before committing."
+    exit 1
+fi
+
+echo "✅ Pre-commit checks passed!"
+EOF
+    chmod +x .git/hooks/pre-commit
+fi
+
+# Copy environment file if it doesn't exist
+if [ ! -f ".env" ] && [ -f ".env.example" ]; then
+    echo "📝 Creating .env file from .env.example..."
+    cp .env.example .env
+    echo "⚠️  Please edit .env file with your local configuration"
+fi
+
+echo "🎉 Setup complete!"
+echo ""
+echo "Next steps:"
+echo "1. Review and edit .env file if needed"
+echo "2. Run './scripts/dev' to start the development server"
+echo "3. Visit http://localhost:3000 to see your application"
+echo ""
+echo "Useful commands:"
+echo "  ./scripts/dev      - Start development server"
+echo "  ./scripts/test     - Run test suite"
+echo "  ./scripts/lint     - Run code quality checks"
+echo "  ./scripts/deploy   - Deploy to staging/production"

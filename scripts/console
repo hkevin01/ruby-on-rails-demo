@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Console helper script
+# Provides easy access to Rails console with different environments
+
+ENVIRONMENT=${1:-development}
+
+echo "🖥️  Starting Rails console for $ENVIRONMENT environment"
+
+# Validate environment
+if [[ "$ENVIRONMENT" != "development" && "$ENVIRONMENT" != "test" && "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" ]]; then
+    echo "❌ Invalid environment. Use 'development', 'test', 'staging', or 'production'"
+    exit 1
+fi
+
+# Ensure we're in the Rails root
+if [ ! -f "Gemfile" ]; then
+    echo "❌ No Gemfile found. Please run this script from the Rails application root."
+    exit 1
+fi
+
+# Warning for production
+if [[ "$ENVIRONMENT" == "production" ]]; then
+    echo "⚠️  WARNING: You are about to access the PRODUCTION console!"
+    echo "This can affect live data. Are you sure? (y/N)"
+    read -r confirmation
+    if [[ "$confirmation" != "y" && "$confirmation" != "Y" ]]; then
+        echo "Aborted."
+        exit 1
+    fi
+fi
+
+# Set environment and start console
+export RAILS_ENV=$ENVIRONMENT
+bundle exec rails console

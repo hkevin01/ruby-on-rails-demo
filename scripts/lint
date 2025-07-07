@@ -1,0 +1,112 @@
+#!/bin/bash
+
+# Code quality and linting script
+# Runs all code quality checks
+
+set -e
+
+echo "🔍 Running Code Quality Checks"
+
+# Ensure we're in the Rails root
+if [ ! -f "Gemfile" ]; then
+    echo "❌ No Gemfile found. Please run this script from the Rails application root."
+    exit 1
+fi
+
+echo "📦 Installing dependencies..."
+bundle install --quiet
+
+# Initialize error tracking
+errors=0
+
+# Run RuboCop
+echo "🚨 Running RuboCop..."
+if bundle exec rubocop; then
+    echo "✅ RuboCop passed"
+else
+    echo "❌ RuboCop failed"
+    errors=$((errors + 1))
+fi
+
+# Run Brakeman security scan
+echo "🔒 Running Brakeman security scan..."
+if bundle exec brakeman --exit-on-warn; then
+    echo "✅ Brakeman security scan passed"
+else
+    echo "❌ Brakeman security scan failed"
+    errors=$((errors + 1))
+fi
+
+# Run Bundle Audit for gem vulnerabilities
+echo "🔍 Checking for gem vulnerabilities..."
+if bundle exec bundle-audit check --update; then
+    echo "✅ No gem vulnerabilities found"
+else
+    echo "❌ Gem vulnerabilities detected"
+    errors=$((errors + 1))
+fi
+
+# Check for Rails best practices (if rails_best_practices gem is available)
+if gem list rails_best_practices -i >/dev/null 2>&1; then
+    echo "📋 Running Rails Best Practices check..."
+    if bundle exec rails_best_practices; then
+        echo "✅ Rails Best Practices check passed"
+    else
+        echo "❌ Rails Best Practices check failed"
+        errors=$((errors + 1))
+    fi
+fi
+
+# Check for dead code (if reek gem is available)
+if gem list reek -i >/dev/null 2>&1; then
+    echo "👃 Running Reek code smell detection..."
+    if bundle exec reek; then
+        echo "✅ No code smells detected"
+    else
+        echo "⚠️  Code smells detected (warnings only)"
+    fi
+fi
+
+# JavaScript/CSS linting (if available)
+if [ -f "package.json" ]; then
+    echo "🎨 Running JavaScript/CSS linting..."
+    
+    # ESLint
+    if yarn list eslint >/dev/null 2>&1; then
+        if yarn run eslint app/javascript/; then
+            echo "✅ ESLint passed"
+        else
+            echo "❌ ESLint failed"
+            errors=$((errors + 1))
+        fi
+    fi
+    
+    # Stylelint
+    if yarn list stylelint >/dev/null 2>&1; then
+        if yarn run stylelint "app/assets/stylesheets/**/*.scss"; then
+            echo "✅ Stylelint passed"
+        else
+            echo "❌ Stylelint failed"
+            errors=$((errors + 1))
+        fi
+    fi
+fi
+
+# Summary
+echo ""
+echo "📊 Code Quality Summary"
+echo "======================"
+
+if [ $errors -eq 0 ]; then
+    echo "🎉 All code quality checks passed!"
+    exit 0
+else
+    echo "❌ $errors code quality check(s) failed."
+    echo ""
+    echo "To fix issues:"
+    echo "  - RuboCop: Run 'bundle exec rubocop -a' to auto-fix"
+    echo "  - Brakeman: Review security warnings and fix manually"
+    echo "  - Bundle Audit: Update vulnerable gems"
+    echo ""
+    exit 1
+fi

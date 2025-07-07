@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Development server startup script
+# This script starts all necessary services for development
+
+set -e
+
+echo "🚀 Starting Ruby on Rails Blog Development Environment"
+
+# Check if required commands exist
+command -v ruby >/dev/null 2>&1 || { echo "❌ Ruby is required but not installed. Aborting." >&2; exit 1; }
+command -v bundle >/dev/null 2>&1 || { echo "❌ Bundler is required but not installed. Aborting." >&2; exit 1; }
+command -v yarn >/dev/null 2>&1 || { echo "❌ Yarn is required but not installed. Aborting." >&2; exit 1; }
+
+# Check if we're in the right directory
+if [ ! -f "Gemfile" ]; then
+    echo "❌ No Gemfile found. Please run this script from the Rails application root."
+    exit 1
+fi
+
+echo "📦 Installing dependencies..."
+
+# Install Ruby gems
+echo "Installing Ruby gems..."
+bundle install
+
+# Install JavaScript packages
+echo "Installing JavaScript packages..."
+yarn install
+
+# Setup database if it doesn't exist
+if [ ! -f "db/development.sqlite3" ] && [ ! -d "db/migrate" ]; then
+    echo "🗄️  Setting up database..."
+    bundle exec rails db:create
+    bundle exec rails db:migrate
+    bundle exec rails db:seed
+fi
+
+# Start services in the background
+echo "🔧 Starting services..."
+
+# Start Redis (if available)
+if command -v redis-server >/dev/null 2>&1; then
+    echo "Starting Redis..."
+    redis-server --daemonize yes
+fi
+
+# Start Sidekiq in the background
+if bundle show sidekiq >/dev/null 2>&1; then
+    echo "Starting Sidekiq..."
+    bundle exec sidekiq -d
+fi
+
+# Compile assets
+echo "📦 Compiling assets..."
+bundle exec rails assets:precompile
+
+# Start the Rails server
+echo "🌐 Starting Rails server on http://localhost:3000"
+bundle exec rails server
+
+echo "✅ Development environment is ready!"
+echo "📱 Visit http://localhost:3000 to see your application"

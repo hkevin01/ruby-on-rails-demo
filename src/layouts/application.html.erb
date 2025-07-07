@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="<%= content_for(:description) || 'A modern Ruby on Rails blog application' %>">
+    <meta name="keywords" content="<%= content_for(:keywords) || 'blog, ruby on rails, web development' %>">
+    <meta name="author" content="<%= content_for(:author) || 'Blog Application' %>">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:title" content="<%= content_for(:title) || 'Rails Blog' %>">
+    <meta property="og:description" content="<%= content_for(:description) || 'A modern Ruby on Rails blog application' %>">
+    <meta property="og:image" content="<%= content_for(:og_image) || asset_url('og-image.jpg') %>">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<%= request.original_url %>">
+    <meta property="twitter:title" content="<%= content_for(:title) || 'Rails Blog' %>">
+    <meta property="twitter:description" content="<%= content_for(:description) || 'A modern Ruby on Rails blog application' %>">
+    <meta property="twitter:image" content="<%= content_for(:og_image) || asset_url('og-image.jpg') %>">
+
+    <title><%= content_for(:title) || 'Rails Blog' %></title>
+
+    <meta name="csrf-param" content="authenticity_token" />
+    <meta name="csrf-token" content="<%= form_authenticity_token %>" />
+    
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    
+    <!-- Favicon -->
+    <%= favicon_link_tag asset_path('favicon.ico') %>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Additional head content -->
+    <%= content_for(:head) %>
+  </head>
+
+  <body class="<%= content_for(:body_class) %>">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Navigation -->
+    <%= render 'shared/navigation' %>
+
+    <!-- Flash messages -->
+    <%= render 'shared/flash_messages' %>
+
+    <!-- Main content -->
+    <main id="main-content" class="main-content">
+      <%= yield %>
+    </main>
+
+    <!-- Footer -->
+    <%= render 'shared/footer' %>
+
+    <!-- Back to top button -->
+    <button id="back-to-top" class="btn btn-primary back-to-top" aria-label="Back to top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Loading spinner -->
+    <div id="loading-spinner" class="loading-spinner" aria-hidden="true">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Additional body content -->
+    <%= content_for(:body) %>
+  </body>
+</html>
