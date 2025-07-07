@@ -6,7 +6,7 @@
     <meta name="description" content="<%= content_for(:description) || 'A modern Ruby on Rails blog application' %>">
     <meta name="keywords" content="<%= content_for(:keywords) || 'blog, ruby on rails, web development' %>">
     <meta name="author" content="<%= content_for(:author) || 'Blog Application' %>">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="<%= request.original_url %>">
@@ -25,20 +25,20 @@
 
     <meta name="csrf-param" content="authenticity_token" />
     <meta name="csrf-token" content="<%= form_authenticity_token %>" />
-    
+
     <%= csp_meta_tag %>
-    
+
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    
+
     <!-- Favicon -->
     <%= favicon_link_tag asset_path('favicon.ico') %>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Additional head content -->
     <%= content_for(:head) %>
   </head>

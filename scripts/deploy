@@ -54,13 +54,13 @@ fi
 # Production-specific checks
 if [[ "$ENVIRONMENT" == "production" ]]; then
     echo "🔒 Running additional production checks..."
-    
+
     # Check secrets are configured
     if [[ -z "$SECRET_KEY_BASE" ]]; then
         echo "❌ SECRET_KEY_BASE environment variable is not set"
         exit 1
     fi
-    
+
     # Check database configuration
     if ! bundle exec rails db:version >/dev/null 2>&1; then
         echo "❌ Database connection failed"
@@ -82,14 +82,14 @@ case $ENVIRONMENT in
             # Add your staging deployment commands here
         fi
         ;;
-        
+
     production)
         echo "🌟 Deploying to production..."
-        
+
         # Create deployment tag
         tag="v$(date +%Y%m%d-%H%M%S)"
         git tag -a "$tag" -m "Production deployment $tag"
-        
+
         # Heroku production deployment
         if command -v heroku >/dev/null 2>&1; then
             git push heroku main
@@ -99,7 +99,7 @@ case $ENVIRONMENT in
             echo "ℹ️  Heroku CLI not found. Using alternative deployment method..."
             # Add your production deployment commands here
         fi
-        
+
         # Push tags to origin
         git push origin --tags
         ;;
@@ -120,7 +120,7 @@ case $ENVIRONMENT in
             exit 1
         fi
         ;;
-        
+
     production)
         production_url="https://your-app.com"
         echo "Checking production health..."

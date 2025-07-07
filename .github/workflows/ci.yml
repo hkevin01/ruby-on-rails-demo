@@ -17,7 +17,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:14
@@ -32,7 +32,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-          
+
       redis:
         image: redis:7
         options: >-
@@ -84,7 +84,7 @@ jobs:
         REDIS_URL: redis://localhost:6379/0
       run: |
         bundle exec rspec --format documentation --format RspecJunitFormatter --out tmp/test-results/rspec.xml
-        
+
     - name: Upload test results
       uses: actions/upload-artifact@v3
       if: always()
@@ -103,16 +103,16 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Deploy to staging
       run: |
         echo "Deploy to staging environment"
         # Add your deployment commands here
-        
+
     - name: Run smoke tests
       run: |
         echo "Run smoke tests against staging"

@@ -1,0 +1,59 @@
+<% flash.each do |type, message| %>
+  <% next if message.blank? %>
+
+  <%
+    # Map Rails flash types to Bootstrap alert classes
+    alert_class = case type.to_s
+                  when 'notice', 'success'
+                    'alert-success'
+                  when 'alert', 'error'
+                    'alert-danger'
+                  when 'warning'
+                    'alert-warning'
+                  when 'info'
+                    'alert-info'
+                  else
+                    'alert-primary'
+                  end
+
+    # Set appropriate icon for each alert type
+    icon_class = case type.to_s
+                 when 'notice', 'success'
+                   'fas fa-check-circle'
+                 when 'alert', 'error'
+                   'fas fa-exclamation-circle'
+                 when 'warning'
+                   'fas fa-exclamation-triangle'
+                 when 'info'
+                   'fas fa-info-circle'
+                 else
+                   'fas fa-bell'
+                 end
+  %>
+
+  <div class="alert <%= alert_class %> alert-dismissible fade show mb-0"
+       role="alert"
+       data-controller="flash-message"
+       data-flash-message-auto-dismiss-value="5000">
+
+    <div class="container">
+      <div class="d-flex align-items-center">
+        <i class="<%= icon_class %> me-2"></i>
+        <div class="flex-grow-1">
+          <%= simple_format(message, {}, wrapper_tag: "span") %>
+        </div>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+                data-action="click->flash-message#dismiss">
+        </button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<!-- Toast container for JavaScript-triggered messages -->
+<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3">
+  <!-- Toasts will be dynamically inserted here -->
+</div>

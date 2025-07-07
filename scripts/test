@@ -45,7 +45,7 @@ bundle exec rspec \
 if [ -f "coverage/.last_run.json" ]; then
     coverage=$(ruby -r json -e "puts JSON.parse(File.read('coverage/.last_run.json'))['result']['line']")
     echo "📊 Test coverage: ${coverage}%"
-    
+
     # Fail if coverage is below threshold (90%)
     if (( $(echo "$coverage < 90" | bc -l) )); then
         echo "❌ Test coverage is below 90%. Please add more tests."

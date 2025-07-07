@@ -70,7 +70,7 @@ fi
 # JavaScript/CSS linting (if available)
 if [ -f "package.json" ]; then
     echo "🎨 Running JavaScript/CSS linting..."
-    
+
     # ESLint
     if yarn list eslint >/dev/null 2>&1; then
         if yarn run eslint app/javascript/; then
@@ -80,7 +80,7 @@ if [ -f "package.json" ]; then
             errors=$((errors + 1))
         fi
     fi
-    
+
     # Stylelint
     if yarn list stylelint >/dev/null 2>&1; then
         if yarn run stylelint "app/assets/stylesheets/**/*.scss"; then

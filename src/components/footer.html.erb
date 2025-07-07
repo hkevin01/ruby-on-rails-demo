@@ -1,0 +1,127 @@
+<footer class="bg-dark text-light py-5 mt-5">
+  <div class="container">
+    <div class="row">
+      <!-- About section -->
+      <div class="col-lg-4 col-md-6 mb-4">
+        <h5 class="mb-3">
+          <i class="fas fa-blog me-2"></i>
+          Rails Blog
+        </h5>
+        <p class="text-muted">
+          A modern, feature-rich blog application built with Ruby on Rails,
+          showcasing best practices and popular integrations in the Rails ecosystem.
+        </p>
+        <div class="social-links">
+          <a href="#" class="text-light me-3" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" class="text-light me-3" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-light me-3" aria-label="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="#" class="text-light me-3" aria-label="GitHub">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="col-lg-2 col-md-6 mb-4">
+        <h6 class="mb-3">Quick Links</h6>
+        <ul class="list-unstyled">
+          <li class="mb-2">
+            <%= link_to "Home", root_path, class: "text-muted text-decoration-none" %>
+          </li>
+          <li class="mb-2">
+            <%= link_to "All Posts", posts_path, class: "text-muted text-decoration-none" %>
+          </li>
+          <li class="mb-2">
+            <%= link_to "Categories", categories_path, class: "text-muted text-decoration-none" %>
+          </li>
+          <li class="mb-2">
+            <%= link_to "About", about_path, class: "text-muted text-decoration-none" %>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Categories -->
+      <div class="col-lg-2 col-md-6 mb-4">
+        <h6 class="mb-3">Categories</h6>
+        <ul class="list-unstyled">
+          <% Category.featured.limit(5).each do |category| %>
+            <li class="mb-2">
+              <%= link_to category.name, category_path(category), class: "text-muted text-decoration-none" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <!-- Contact info -->
+      <div class="col-lg-4 col-md-6 mb-4">
+        <h6 class="mb-3">Get In Touch</h6>
+        <div class="contact-info">
+          <div class="mb-2">
+            <i class="fas fa-envelope me-2"></i>
+            <a href="mailto:contact@railsblog.com" class="text-muted text-decoration-none">
+              contact@railsblog.com
+            </a>
+          </div>
+          <div class="mb-2">
+            <i class="fas fa-phone me-2"></i>
+            <span class="text-muted">+1 (555) 123-4567</span>
+          </div>
+          <div class="mb-3">
+            <i class="fas fa-map-marker-alt me-2"></i>
+            <span class="text-muted">San Francisco, CA</span>
+          </div>
+        </div>
+
+        <!-- Newsletter signup -->
+        <div class="newsletter-signup">
+          <h6 class="mb-2">Subscribe to Newsletter</h6>
+          <form class="d-flex">
+            <input type="email"
+                   class="form-control me-2"
+                   placeholder="Your email address"
+                   aria-label="Email address for newsletter">
+            <button class="btn btn-primary" type="submit">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+    <!-- Bottom footer -->
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <p class="mb-0 text-muted">
+          &copy; <%= Date.current.year %> Rails Blog. All rights reserved.
+        </p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item">
+            <%= link_to "Privacy Policy", privacy_path, class: "text-muted text-decoration-none" %>
+          </li>
+          <li class="list-inline-item">
+            <span class="text-muted">|</span>
+          </li>
+          <li class="list-inline-item">
+            <%= link_to "Terms of Service", terms_path, class: "text-muted text-decoration-none" %>
+          </li>
+          <li class="list-inline-item">
+            <span class="text-muted">|</span>
+          </li>
+          <li class="list-inline-item">
+            <%= link_to "Contact", contact_path, class: "text-muted text-decoration-none" %>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>

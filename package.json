@@ -1,0 +1,50 @@
+{
+  "name": "rails-blog",
+  "version": "1.0.0",
+  "description": "A modern Ruby on Rails blog application",
+  "main": "app/javascript/application.js",
+  "scripts": {
+    "build": "webpack --mode=production",
+    "dev": "webpack --mode=development --watch",
+    "lint:js": "eslint app/javascript",
+    "lint:css": "stylelint 'app/assets/stylesheets/**/*.scss'",
+    "format": "prettier --write 'app/javascript/**/*.js' 'app/assets/stylesheets/**/*.scss'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/rails-blog.git"
+  },
+  "keywords": [
+    "ruby",
+    "rails",
+    "blog",
+    "javascript",
+    "bootstrap",
+    "stimulus"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/rails-blog/issues"
+  },
+  "homepage": "https://github.com/yourusername/rails-blog#readme",
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.1",
+    "@hotwired/turbo-rails": "^7.2.4",
+    "@popperjs/core": "^2.11.6",
+    "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-stimulus": "^1.1.0",
+    "prettier": "^2.8.3",
+    "stylelint": "^14.16.1",
+    "stylelint-config-prettier": "^9.0.4",
+    "stylelint-config-standard-scss": "^6.1.0"
+  },
+  "browserslist": [
+    "defaults"
+  ]
+}

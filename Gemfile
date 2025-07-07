@@ -62,13 +62,13 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry-rails'                          # Better console
   gem 'pry-byebug'                         # Debugging with pry
-  
+
   # Testing
   gem 'rspec-rails'                        # Testing framework
   gem 'factory_bot_rails'                  # Test data generation
   gem 'faker'                              # Fake data generation
   gem 'shoulda-matchers'                   # RSpec matchers
-  
+
   # Code Quality
   gem 'rubocop'                            # Code linting
   gem 'rubocop-rails'                      # Rails-specific cops
