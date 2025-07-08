@@ -1,39 +1,24 @@
-# Source Layouts and Components
+# README
 
-This directory contains reusable layout components and design system elements for the Ruby on Rails Blog Application.
+This README would normally document whatever steps are necessary to get the
+application up and running.
 
-## Structure
+Things you may want to cover:
 
-```
-src/
-├── layouts/           # Page layout templates
-├── components/        # Reusable UI components
-├── styles/           # SCSS stylesheets
-├── javascript/       # JavaScript modules
-└── assets/           # Static assets (images, fonts)
-```
+* Ruby version
 
-## Usage
+* System dependencies
 
-These source files are designed to be:
-1. **Reusable** - Components can be used across different pages
-2. **Maintainable** - Centralized styling and behavior
-3. **Scalable** - Easy to extend and modify
-4. **Accessible** - Built with accessibility in mind
+* Configuration
 
-## Development
+* Database creation
 
-When working with these files:
-1. Follow BEM methodology for CSS classes
-2. Use semantic HTML elements
-3. Ensure responsive design
-4. Test across different browsers
-5. Validate accessibility with screen readers
+* Database initialization
 
-## Integration with Rails
+* How to run the test suite
 
-These components integrate with Rails through:
-- **View partials** - Rendered in ERB templates
-- **Helper methods** - Ruby helpers for dynamic content
-- **Asset pipeline** - SCSS and JavaScript compilation
-- **Stimulus controllers** - Interactive behavior
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+
+* ...

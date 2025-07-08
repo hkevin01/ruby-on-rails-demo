@@ -1,0 +1,157 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+    {
+      "label": "Rails: Start Development Server",
+      "type": "shell",
+      "command": "./run.sh",
+      "args": ["dev"],
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "Rails: Generate New App",
+      "type": "shell",
+      "command": "./run.sh",
+      "args": ["init"],
+      "group": "build",
+      "isBackground": false,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Rails: Run Tests",
+      "type": "shell",
+      "command": "./run.sh",
+      "args": ["test"],
+      "group": "test",
+      "isBackground": false,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Rails: Run Linter",
+      "type": "shell",
+      "command": "./run.sh",
+      "args": ["lint"],
+      "group": "build",
+      "isBackground": false,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Rails: Open Console",
+      "type": "shell",
+      "command": "./run.sh",
+      "args": ["console"],
+      "group": "build",
+      "isBackground": false,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Docker: Build Development Environment",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["-f", "docker/docker-compose.dev.yml", "build"],
+      "group": "build",
+      "isBackground": false,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Docker: Stop All Services",
+      "type": "shell",
+      "command": "./run.sh",
+      "args": ["stop"],
+      "group": "build",
+      "isBackground": false,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Rails: Database Setup",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["-f", "docker/docker-compose.dev.yml", "exec", "web", "rails", "db:setup"],
+      "group": "build",
+      "isBackground": false,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Rails: Generate Migration",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["-f", "docker/docker-compose.dev.yml", "exec", "web", "rails", "generate", "migration"],
+      "group": "build",
+      "isBackground": false,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Rails: Run Migrations",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["-f", "docker/docker-compose.dev.yml", "exec", "web", "rails", "db:migrate"],
+      "group": "build",
+      "isBackground": false,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    }
+  ]
+}

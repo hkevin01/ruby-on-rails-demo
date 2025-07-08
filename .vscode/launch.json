@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Rails Server (Docker)",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}/src",
+      "remoteRoot": "/app"
+    },
+    {
+      "name": "Run Rails Server in Terminal",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/run.sh",
+      "args": ["dev"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

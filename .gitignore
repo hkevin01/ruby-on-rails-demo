@@ -4,88 +4,253 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+# ============================================================================
+# RAILS SPECIFIC
+# ============================================================================
+
 # Ignore bundler config.
 /.bundle
+/src/.bundle
 
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+/src/log/*
+/src/tmp/*
+!/src/log/.keep
+!/src/tmp/.keep
 
 # Ignore pidfiles, but keep the directory.
 /tmp/pids/*
 !/tmp/pids/
 !/tmp/pids/.keep
+/src/tmp/pids/*
+!/src/tmp/pids/
+!/src/tmp/pids/.keep
 
 # Ignore uploaded files in development.
 /storage/*
 !/storage/.keep
+/public/system
+/public/uploads
+/src/storage/*
+!/src/storage/.keep
+/src/public/system
+/src/public/uploads
 
+# Ignore precompiled assets
 /public/assets
-.byebug_history
+/public/packs
+/public/packs-test
+/src/public/assets
+/src/public/packs
+/src/public/packs-test
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
-
-/public/packs
-/public/packs-test
-/node_modules
-/yarn-error.log
-yarn-debug.log*
-.yarn-integrity
+/config/credentials/*.key
+/src/config/master.key
+/src/config/credentials/*.key
 
 # Ignore application configuration
 /config/application.yml
+/src/config/application.yml
+
+# Rails specific files
+*.rbc
+capybara-*.html
+.rspec
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/db/*.sqlite3-*
+/src/db/*.sqlite3
+/src/db/*.sqlite3-journal
+/src/db/*.sqlite3-*
+rerun.txt
+pickle-email-*.html
+
+# Ignore pow environment settings
+.powenv
+
+# Ignore Spring files
+/spring/*.pid
+/src/spring/*.pid
+
+# Rails new generated files (we use our own project structure)
+/src/.dockerignore
+/src/.gitignore
+/src/.gitattributes
+/src/.ruby-version
+/src/.node-version
+/src/.github/
+/src/README.md
+
+# Rails vendor directory (we manage gems at project root)
+/src/vendor/bundle/
+/src/vendor/cache/
+
+# ============================================================================
+# NODE.JS / FRONTEND
+# ============================================================================
+
+# Node modules
+/node_modules
+node_modules/
+/src/node_modules
+
+# Yarn files
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+.yarn-cache/
+/src/yarn-error.log
+/src/yarn-debug.log*
+/src/.yarn-integrity
+/src/.yarn-cache/
+
+# NPM files
+.npm
+package-lock.json
+/src/.npm
+/src/package-lock.json
+
+# Webpacker cache
+/tmp/webpacker
+/src/tmp/webpacker
+
+# Parcel cache
+.cache
+.parcel-cache
+/src/.cache
+/src/.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build output
+.nuxt
+
+# Vuepress build output
+.vuepress/dist
+
+# ============================================================================
+# ENVIRONMENT & CONFIGURATION
+# ============================================================================
 
 # Environment variables
 .env
+.env.*
+!.env.example
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Local configuration
+config/local.yml
+config/database.local.yml
 
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# ============================================================================
+# DEVELOPMENT TOOLS & DEBUGGING
+# ============================================================================
+
+# Byebug command history file
+.byebug_history
+
+# Pry history
+.pry_history
+
+# IRB history
+.irb_history
+
+# Debug gems
+.ruby-debug
+
+# Solargraph cache
+.solargraph/
+
+# ============================================================================
+# TESTING & COVERAGE
+# ============================================================================
 
 # Coverage reports
 /coverage/
+/coverage.data
+.coverage
+.coverage.*
+/src/coverage/
+/src/coverage.data
+/src/.coverage
+/src/.coverage.*
+
+# SimpleCov
+coverage/
+/src/coverage/
 
 # RSpec
 spec/examples.txt
+/spec/reports/
+/spec/tmp/
+/src/spec/examples.txt
+/src/spec/reports/
+/src/spec/tmp/
 
 # Capybara screenshots
 /tmp/capybara/
+/src/tmp/capybara/
 
-# Webpacker cache
-/tmp/webpacker
+# Test database
+/db/test.sqlite3
+/src/db/test.sqlite3
 
-# yarn integrity file
-.yarn-integrity
+# ============================================================================
+# DOCKER & CONTAINERS
+# ============================================================================
+
+# Docker volumes
+docker/data/
+docker/logs/
+docker/postgres_data/
+docker/redis_data/
+
+# Docker environment files
+.env.docker
+docker-compose.override.yml
+
+# ============================================================================
+# DATABASE
+# ============================================================================
+
+# SQLite databases
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-*
+*.db
+
+# Database dumps
+*.dump
+*.sql
 
 # Redis dump file
 dump.rdb
 
-# Database files
-*.sqlite3
-*.sqlite3-journal
-*.sqlite3-*
+# PostgreSQL
+*.psql
 
-# Logs
+# ============================================================================
+# LOGS & TEMPORARY FILES
+# ============================================================================
+
+# Log files
 *.log
+/log/*.log
+
+# Temporary files
+*.tmp
+*.temp
+*~
 
 # Runtime data
 pids
@@ -93,104 +258,204 @@ pids
 *.seed
 *.pid.lock
 
-# Directory for instrumented libs generated by jscoverage/JSCover
-lib-cov
+# ============================================================================
+# OPERATING SYSTEM FILES
+# ============================================================================
 
-# Coverage directory used by tools like istanbul
-coverage
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
 
-# nyc test coverage
-.nyc_output
+# Windows
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# node-waf configuration
-.lock-wscript
+# Linux
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
 
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
+# ============================================================================
+# EDITOR & IDE FILES
+# ============================================================================
 
-# Dependency directories
-node_modules/
+# VS Code (keep our workspace settings but ignore user-specific files)
+/.vscode/settings.json
+!/.vscode/extensions.json
+!/.vscode/tasks.json
+!/.vscode/launch.json
+/.vscode/c_cpp_properties.json
+/.vscode/launch.test.json
 
-# Optional npm cache directory
-.npm
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# dotenv environment variables file
-.env
-
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# next.js build output
-.next
-
-# nuxt.js build output
-.nuxt
-
-# vuepress build output
-.vuepress/dist
-
-# Serverless directories
-.serverless
-
-# Rails specific
-*.rbc
-capybara-*.html
-.rspec
-/db/*.sqlite3
-/db/*.sqlite3-journal
-/public/system
-/spec/tmp
-*.orig
-rerun.txt
-pickle-email-*.html
-
-# Ignore pow environment settings
-.powenv
-
-# Ignore Byebug command history file.
-.byebug_history
-
-# Ignore node_modules
-node_modules/
-
-# Ignore precompiled javascript packs
-/public/packs
-/public/packs-test
-
-# Ignore yarn files
-/yarn-error.log
-yarn-debug.log*
-.yarn-integrity
-
-# Ignore uploaded files in development
-/storage/*
-!/storage/.keep
-
-# Ignore master key for decrypting credentials and more.
-/config/master.key
-
-# Ignore credentials files
-/config/credentials/*.key
-
-# Ignore temporary files
-*.tmp
-*.temp
-
-# Ignore editor directories and files
-.vscode/
+# RubyMine / IntelliJ
 .idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*.un~
+Session.vim
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Visual Studio
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# ============================================================================
+# RUBY SPECIFIC
+# ============================================================================
+
+# RubyGems
+*.gem
+.gems/
+
+# Ruby version managers
+.rbenv-version
+.ruby-version
+.rvmrc
+
+# Bundler
+vendor/bundle/
+.bundle/
+Gemfile.lock.orig
+
+# Rails/Bundler in src (we manage dependencies at project root)
+/src/Gemfile
+/src/Gemfile.lock
+/src/.bundle/
+/src/vendor/bundle/
+
+# Rails auto-generated files
+/src/Procfile.dev
+/src/config.ru
+/src/Rakefile
+
+# Rails directories that contain auto-generated content
+/src/bin/
+/src/lib/tasks/
+/src/test/fixtures/files/
+
+# Rails log and temp directories (but keep structure)
+/src/log/*.log
+/src/tmp/**/*
+!/src/tmp/.keep
+!/src/tmp/pids/
+!/src/tmp/pids/.keep
+
+# Rails storage (development uploads)
+/src/storage/**/*
+!/src/storage/.keep
+
+# Rails public assets (generated)
+/src/public/assets/
+/src/public/packs/
+/src/public/uploads/
+/src/public/system/
+
+# Rails cache
+/src/tmp/cache/
+
+# ============================================================================
+# SECURITY & SENSITIVE DATA
+# ============================================================================
+
+# SSH keys
+*.pem
+*.key
+*.crt
+*.csr
+
+# API keys and secrets
+secrets.yml
+.secrets
+config/secrets.yml
+
+# Certificate files
+*.p12
+*.pfx
+
+# ============================================================================
+# DEPLOYMENT & PRODUCTION
+# ============================================================================
+
+# Deployment files
+/public/sitemap*
+/public/robots.txt
+
+# Capistrano
+/config/deploy/*
+/log/deploy.log
+
+# Heroku
+.slugignore
+
+# ============================================================================
+# BACKUP & ARCHIVE FILES
+# ============================================================================
+
+# Archive files
+*.tar
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# ============================================================================
+# MISCELLANEOUS
+# ============================================================================
+
+# Thumbnail cache files
+._*
+.thumbnails
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Compiled Python files
+*.pyc
+
+# Local data files
+/data/
+
+# Documentation builds
+/doc/app/
+/doc/yard/
+
+# YARD artifacts
+.yardoc
+_yardoc/
+doc/
