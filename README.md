@@ -81,6 +81,26 @@ bundle exec rubocop
 bundle exec sidekiq
 ```
 
+## Development Tools
+
+### VS Code Extensions
+
+This project includes a curated set of VS Code extensions to enhance your development experience. When you open this workspace, VS Code will automatically suggest installing the recommended extensions.
+
+**Key extensions include:**
+- Ruby language support with Solargraph
+- Docker and Dev Containers for containerized development
+- GitHub Copilot for AI-assisted coding
+- Testing tools and coverage visualization
+- Code formatting and linting tools
+
+For a complete list and detailed information about each extension, see [VS Code Extensions Guide](docs/vscode-extensions.md).
+
+To install all recommended extensions at once:
+1. Open Command Palette (`Ctrl+Shift+P`)
+2. Run "Extensions: Show Recommended Extensions"
+3. Click "Install Workspace Extension Recommendations"
+
 ## Deployment
 
 See [deployment guide](docs/deployment.md) for production deployment instructions.
