@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_DB: blog_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_test_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    environment:
+      - RAILS_ENV=test
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/blog_test
+      - REDIS_URL=redis://redis:6379/1
+    volumes:
+      - ..:/app
+      - bundle_cache:/usr/local/bundle
+      - coverage:/app/coverage
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: ["bundle", "exec", "rspec", "--format", "documentation"]
+
+volumes:
+  postgres_test_data:
+  redis_test_data:
+  bundle_cache:
+  coverage:

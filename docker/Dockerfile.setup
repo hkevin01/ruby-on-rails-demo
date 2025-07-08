@@ -1,0 +1,20 @@
+# Dockerfile for initial Rails app setup
+FROM ruby:3.1.0
+
+# Install system dependencies
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
+
+# Create a temporary Gemfile for Rails installation
+RUN echo 'source "https://rubygems.org"' > /tmp/Gemfile && \
+  echo 'gem "rails", "7.0.4"' >> /tmp/Gemfile
+
+# Install Rails using bundler
+WORKDIR /tmp
+RUN bundle install
+
+# Set working directory for the actual app
+WORKDIR /app
+
+# Use a shell entrypoint to ensure PATH is correct
+ENTRYPOINT ["/bin/sh", "-c"]
+CMD ["rails new . --force --database=postgresql"]

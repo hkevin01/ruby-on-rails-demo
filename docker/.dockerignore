@@ -1,0 +1,62 @@
+# Docker ignore file for Rails Blog Application
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+docs/
+
+# Logs
+log/*
+*.log
+
+# Temporary files
+tmp/
+*.tmp
+*.swp
+*.swo
+
+# Test coverage
+coverage/
+
+# Node modules (will be installed in container)
+node_modules/
+
+# Bundler (will be installed in container)
+vendor/bundle/
+
+# Environment files (should be handled separately)
+.env*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Local development overrides
+docker-compose.override.yml
+Dockerfile.local
+
+# Build artifacts
+public/assets/
+public/packs/
+
+# Database files
+*.sqlite3
+
+# Secrets
+config/master.key
+config/credentials/
+
+# Local scripts
+run.sh

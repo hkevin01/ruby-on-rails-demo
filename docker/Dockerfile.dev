@@ -1,0 +1,59 @@
+# Development Dockerfile for Rails Blog Application
+FROM ruby:3.1.0-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+  build-base \
+  postgresql-dev \
+  postgresql-client \
+  tzdata \
+  nodejs \
+  yarn \
+  git \
+  curl \
+  bash \
+  imagemagick \
+  vim \
+  less \
+  && rm -rf /var/cache/apk/*
+
+# Set working directory
+WORKDIR /app
+
+# Create app user
+RUN addgroup -g 1000 -S app && \
+  adduser -u 1000 -S app -G app
+
+# Copy Gemfile and package.json first for better caching
+COPY Gemfile Gemfile.lock package.json yarn.lock ./
+
+# Install Ruby gems (including development gems)
+RUN bundle install
+
+# Install Node.js packages
+RUN yarn install --frozen-lockfile && \
+  yarn cache clean
+
+# Copy application code
+COPY . .
+
+# Set ownership
+RUN chown -R app:app /app
+
+# Switch to app user
+USER app
+
+# Create necessary directories
+RUN mkdir -p tmp/pids tmp/cache tmp/sockets log storage
+
+# Expose port
+EXPOSE 3000
+
+# Add entrypoint script
+COPY --chown=app:app docker/entrypoint.sh /usr/bin/entrypoint.sh
+USER root
+RUN chmod +x /usr/bin/entrypoint.sh
+USER app
+
+ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+CMD ["rails", "server", "-b", "0.0.0.0"]
