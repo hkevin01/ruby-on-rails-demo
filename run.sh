@@ -83,9 +83,14 @@ show_help() {
     echo "  version        Show version information"
     echo "  status         Show project status"
     echo ""
-    echo "Usage: ./run.sh <command> [options]"
-    echo "Example: ./run.sh dev"
-    echo "Example: ./run.sh console production"
+    echo "Usage: ./run.sh [command] [options]"
+    echo "       ./run.sh (defaults to 'dev' - starts development server)"
+    echo ""
+    echo "Examples:"
+    echo "  ./run.sh              # Start development server (default)"
+    echo "  ./run.sh dev          # Start development server"
+    echo "  ./run.sh console      # Open Rails console"
+    echo "  ./run.sh test         # Run test suite"
     echo ""
 }
 
@@ -369,15 +374,17 @@ cmd_docker_clean() {
 
 # --- Command Dispatcher ---
 
-# Check for command
-if [ -z "$1" ]; then
-    show_help
-    exit 0
-fi
-
 # Case statement for commands
 COMMAND=$1
-shift # remove command from argument list
+
+# If no command provided, default to 'dev'
+if [ -z "$COMMAND" ]; then
+    COMMAND="dev"
+    print_color "CYAN" "ℹ️  No command provided, defaulting to 'dev' (development server)"
+    echo ""
+else
+    shift # remove command from argument list only if one was provided
+fi
 
 # Before running any command, check project root, except for help, version, etc.
 case "$COMMAND" in

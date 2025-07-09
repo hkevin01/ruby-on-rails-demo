@@ -24,15 +24,23 @@ WORKDIR /app
 RUN addgroup -g 1000 -S app && \
   adduser -u 1000 -S app -G app
 
-# Copy Gemfile and package.json first for better caching
-COPY Gemfile Gemfile.lock package.json yarn.lock ./
+# Copy dependency files first for better caching
+COPY Gemfile package.json yarn.lock ./
+COPY src/Gemfile src/Gemfile.lock ./src/
 
-# Install Ruby gems (including development gems)
+# Install Ruby gems from project root
 RUN bundle install
 
-# Install Node.js packages
+# Install Node.js packages from project root
 RUN yarn install --frozen-lockfile && \
   yarn cache clean
+
+# Install Rails gems from src directory
+WORKDIR /app/src
+RUN bundle install
+
+# Go back to app root
+WORKDIR /app
 
 # Copy application code
 COPY . .
@@ -43,11 +51,14 @@ RUN chown -R app:app /app
 # Switch to app user
 USER app
 
-# Create necessary directories
-RUN mkdir -p tmp/pids tmp/cache tmp/sockets log storage
+# Create necessary directories in src
+RUN mkdir -p src/tmp/pids src/tmp/cache src/tmp/sockets src/log src/storage
 
 # Expose port
 EXPOSE 3000
+
+# Set working directory to src for Rails
+WORKDIR /app/src
 
 # Add entrypoint script
 COPY --chown=app:app docker/entrypoint.sh /usr/bin/entrypoint.sh
